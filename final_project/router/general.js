@@ -15,14 +15,19 @@ public_users.get("/", function (req, res) {
     const allBooks = JSON.stringify(books);
     return res.status(300).json(allBooks);
   } else {
-    return res.status(300).json({ message: "Books not found" });
+    return res.status(300).json({ message: "Book not found" });
   }
 });
 
 // Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const isbns = Object.keys(books);
+  if (isbns.includes(req.params.isbn)) {
+    const book = JSON.stringify(books[req.params.isbn]);
+    return res.status(300).json(book);
+  } else {
+    return res.status(300).json({ message: "Book Not Found" });
+  }
 });
 
 // Get book details based on author
