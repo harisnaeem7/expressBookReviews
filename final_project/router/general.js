@@ -49,8 +49,22 @@ public_users.get("/author/:author", function (req, res) {
 
 // Get all books based on title
 public_users.get("/title/:title", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  let title = req.params.title;
+
+  const keys = Object.entries(books);
+
+  const titleBasedSearch = keys.filter(([key, book]) => {
+    return book.title.toLocaleLowerCase() === title.toLocaleLowerCase();
+  });
+
+  if (titleBasedSearch.length > 0) {
+    const data = JSON.stringify(titleBasedSearch);
+    return res.status(300).json(data);
+  } else {
+    return res
+      .status(300)
+      .json({ message: "Book with This Title does not exist." });
+  }
 });
 
 //  Get book review
