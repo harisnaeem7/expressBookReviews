@@ -68,10 +68,36 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     return res.status(300).json({ message: "User not logged in!" });
   } else {
     let book = books[isbn];
-    book.reviews = {
-      [username]: review,
-    };
+    book.reviews[username] = review;
     return res.status(300).json({ message: "Review added successfully" });
+  }
+});
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  let isbn = req.params.isbn;
+  if (!isbn) {
+    return res.status(300).json({ message: "Please enter valid ISBN number" });
+  }
+  let username = req.session.authorization.username;
+  if (!username) {
+    return res.status.json({ message: "User not logged in" });
+  }
+  let book = books[isbn];
+  console.log(book);
+  if (!book) {
+    return res
+      .status(300)
+      .json({ message: "No Book associated with this ISBN number " });
+  } else {
+    if (book.reviews && book.reviews[username]) {
+      delete book.reviews[username];
+
+      return res.status(300).json({ message: "review deleted!" });
+    } else {
+      return res
+        .status(300)
+        .json({ message: "No review associated with this user!" });
+    }
   }
 });
 
