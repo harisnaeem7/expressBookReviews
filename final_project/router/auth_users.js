@@ -92,7 +92,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
     if (book.reviews && book.reviews[username]) {
       delete book.reviews[username];
 
-      return res.status(300).json({ message: "review deleted!" });
+      return res.status(300).json({ message: "review deleted!", book });
     } else {
       return res
         .status(300)
