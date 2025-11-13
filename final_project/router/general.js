@@ -98,17 +98,15 @@ public_users.get("/title/:title", function (req, res) {
 //  Get book review
 public_users.get("/review/:isbn", function (req, res) {
   let isbn = req.params.isbn;
-  const keys = Object.entries(books);
-
-  let reviewsBooks = keys.filter(([id, book]) => {
-    return id === isbn;
-  });
-  if (reviewsBooks.length > 0) {
-    const reviews = reviewsBooks[0][1].reviews;
-    return res.status(300).json(reviews);
-  } else {
-    return res.status(300).json({ message: "Book not Found" });
+  if (!isbn) {
+    return res.status(404).json({ message: "Please enter a valid ISBN" });
   }
+  let reviewsBooks = books[isbn];
+  if (!reviewsBooks) {
+    return res.status(404).json({ message: "Book not found with this ISBN" });
+  }
+
+  return res.status(200).json(reviewsBooks.reviews);
 });
 
 module.exports.general = public_users;
