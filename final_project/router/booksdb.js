@@ -8,9 +8,7 @@ let books = {
   7: {
     author: "Unknown",
     title: "Nj\u00e1l's Saga",
-    reviews: {
-      harisnaeem7: "Very good book",
-    },
+    reviews: {},
   },
   8: { author: "Jane Austen", title: "Pride and Prejudice", reviews: {} },
   9: {

@@ -41,38 +41,39 @@ public_users.post("/register", (req, res) => {
 // Get the book list available in the shop
 public_users.get("/", function (req, res) {
   if (Object.keys(books).length > 0) {
-    const allBooks = JSON.stringify(books);
-    return res.status(300).json(allBooks);
+    const allBooks = JSON.stringify({ books }, null, 4);
+    return res.status(200).send(allBooks);
   } else {
-    return res.status(300).json({ message: "Book not found" });
+    return res.status(404).json({ message: "Books not found" });
   }
 });
 
 // Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
-  const isbns = Object.keys(books);
-  if (isbns.includes(req.params.isbn)) {
-    const book = JSON.stringify(books[req.params.isbn]);
-    return res.status(300).json(book);
-  } else {
-    return res.status(300).json({ message: "Book Not Found" });
+  let isbn = req.params.isbn;
+  if (!isbn) {
+    return res.status(400).json({ message: "Please provide valid isbn" });
   }
+  const book = JSON.stringify(books[isbn], null, 2);
+  if (!book) {
+    return res.status(404).json({ message: "No Book found for this ISBN" });
+  }
+  return res.status(200).send(book);
 });
 
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
   let author = req.params.author;
-  const keys = Object.entries(books);
 
-  const authorSpecificBooks = keys.filter(([key, book]) => {
+  const authorSpecificBooks = Object.values(books).filter((book) => {
     return book.author.toLocaleLowerCase() === author.toLocaleLowerCase();
   });
 
   if (authorSpecificBooks.length > 0) {
-    const data = JSON.stringify(authorSpecificBooks);
-    return res.status(300).json(data);
+    const data = JSON.stringify(authorSpecificBooks, null, 2);
+    return res.status(200).send(data);
   } else {
-    return res.status(300).json({ message: "Author Not Found" });
+    return res.status(400).json({ message: "Author Not Found" });
   }
 });
 
