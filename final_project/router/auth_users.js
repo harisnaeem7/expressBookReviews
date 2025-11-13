@@ -83,7 +83,6 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
     return res.status.json({ message: "User not logged in" });
   }
   let book = books[isbn];
-  console.log(book);
   if (!book) {
     return res
       .status(300)
