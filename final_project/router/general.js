@@ -38,25 +38,65 @@ public_users.post("/register", (req, res) => {
 
 // Get the book list available in the shop
 public_users.get("/", function (req, res) {
-  if (Object.keys(books).length > 0) {
-    const allBooks = JSON.stringify({ books }, null, 4);
-    return res.status(200).send(allBooks);
-  } else {
-    return res.status(404).json({ message: "Books not found" });
-  }
+  // if (Object.keys(books).length > 0) {
+  //   const allBooks = JSON.stringify({ books }, null, 4);
+  //   return res.status(200).send(allBooks);
+  // } else {
+  //   return res.status(404).json({ message: "Books not found" });
+  // }
+
+  //Code for task 10 using Promises
+
+  const getBooks = new Promise((resolve, reject) => {
+    if (Object.keys(books).length > 0) {
+      resolve(books);
+    } else {
+      reject("No Books Found");
+    }
+  });
+
+  getBooks
+    .then((data) => {
+      return res.status(200).json(data);
+    })
+    .catch((err) => {
+      return res.status(404).json({ message: err });
+    });
 });
 
 // Get book details based on ISBN
-public_users.get("/isbn/:isbn", function (req, res) {
-  let isbn = req.params.isbn;
-  if (!isbn) {
-    return res.status(400).json({ message: "Please provide valid isbn" });
+public_users.get("/isbn/:isbn", async function (req, res) {
+  // let isbn = req.params.isbn;
+  // if (!isbn) {
+  //   return res.status(400).json({ message: "Please provide valid isbn" });
+  // }
+  // const book = JSON.stringify(books[isbn], null, 2);
+  // if (!book) {
+  //   return res.status(404).json({ message: "No Book found for this ISBN" });
+  // }
+  // return res.status(200).send(book);
+  try {
+    const isbn = req.params.isbn;
+
+    if (!isbn) {
+      return res.status(400).json({ message: "Please provide valid isbn" });
+    }
+
+    const getBook = new Promise((resolve, reject) => {
+      const book = books[isbn];
+      if (book) {
+        resolve(book);
+      } else {
+        reject("Book Not Foud");
+      }
+    });
+
+    const book = await getBook;
+
+    return res.status(200).json(book);
+  } catch (err) {
+    return res.status(404).json({ message: err });
   }
-  const book = JSON.stringify(books[isbn], null, 2);
-  if (!book) {
-    return res.status(404).json({ message: "No Book found for this ISBN" });
-  }
-  return res.status(200).send(book);
 });
 
 // Get book details based on author
