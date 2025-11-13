@@ -81,18 +81,16 @@ public_users.get("/author/:author", function (req, res) {
 public_users.get("/title/:title", function (req, res) {
   let title = req.params.title;
 
-  const keys = Object.entries(books);
-
-  const titleBasedSearch = keys.filter(([key, book]) => {
+  const titleBasedBook = Object.values(books).filter((book) => {
     return book.title.toLocaleLowerCase() === title.toLocaleLowerCase();
   });
 
-  if (titleBasedSearch.length > 0) {
-    const data = JSON.stringify(titleBasedSearch);
-    return res.status(300).json(data);
+  if (titleBasedBook.length > 0) {
+    const data = JSON.stringify(titleBasedBook, null, 2);
+    return res.status(200).send(data);
   } else {
     return res
-      .status(300)
+      .status(400)
       .json({ message: "Book with This Title does not exist." });
   }
 });
