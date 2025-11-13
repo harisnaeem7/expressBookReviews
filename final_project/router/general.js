@@ -104,7 +104,7 @@ public_users.get("/author/:author", async function (req, res) {
   // let author = req.params.author;
 
   // const authorSpecificBooks = Object.values(books).filter((book) => {
-  //   return book.author.toLocaleLowerCase() === author.toLocaleLowerCase();
+  //   return book.author.toLowerCase() === author.toLowerCase();
   // });
 
   // if (authorSpecificBooks.length > 0) {
@@ -117,7 +117,7 @@ public_users.get("/author/:author", async function (req, res) {
     let author = req.params.author;
     const authorSpecificBook = new Promise((resolve, reject) => {
       const book = Object.values(books).filter((book) => {
-        return book.author.toLocaleLowerCase() === author.toLocaleLowerCase();
+        return book.author.toLowerCase() === author.toLowerCase();
       });
 
       if (book.length > 0) {
@@ -136,20 +136,41 @@ public_users.get("/author/:author", async function (req, res) {
 });
 
 // Get all books based on title
-public_users.get("/title/:title", function (req, res) {
-  let title = req.params.title;
+public_users.get("/title/:title", async function (req, res) {
+  // let title = req.params.title;
 
-  const titleBasedBook = Object.values(books).filter((book) => {
-    return book.title.toLocaleLowerCase() === title.toLocaleLowerCase();
-  });
+  // const titleBasedBook = Object.values(books).filter((book) => {
+  //   return book.title.toLowerCase() === title.toLowerCase();
+  // });
 
-  if (titleBasedBook.length > 0) {
-    const data = JSON.stringify(titleBasedBook, null, 2);
-    return res.status(200).send(data);
-  } else {
-    return res
-      .status(400)
-      .json({ message: "Book with This Title does not exist." });
+  // if (titleBasedBook.length > 0) {
+  //   const data = JSON.stringify(titleBasedBook, null, 2);
+  //   return res.status(200).send(data);
+  // } else {
+  //   return res
+  //     .status(400)
+  //     .json({ message: "Book with This Title does not exist." });
+  // }
+
+  try {
+    let title = req.params.title;
+    const getbookByTitle = new Promise((resolve, reject) => {
+      const book = Object.values(books).filter(
+        (book) => book.title.toLowerCase() === title.toLowerCase()
+      );
+
+      if (book.length > 0) {
+        resolve(book);
+      } else {
+        reject("Book not found for specific title");
+      }
+    });
+
+    const newBook = await getbookByTitle;
+
+    return res.status(200).json(newBook);
+  } catch (err) {
+    return res.status(404).json({ message: err });
   }
 });
 
