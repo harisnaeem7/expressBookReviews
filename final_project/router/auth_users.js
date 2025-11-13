@@ -29,14 +29,14 @@ regd_users.post("/login", (req, res) => {
 
   if (!username || !password) {
     return res
-      .status(300)
+      .status(404)
       .json({ message: "Please enter valid username and password" });
   }
 
   if (authenticatedUser(username, password)) {
     let accessToken = jwt.sign(
       {
-        data: password,
+        data: username,
       },
       "fingerprint_customer",
       {
@@ -49,12 +49,12 @@ regd_users.post("/login", (req, res) => {
       username,
     };
 
-    return res.status(300).json({ message: "Logged in Successfully!" });
+    return res
+      .status(200)
+      .json({ message: "Logged in Successfully!", username });
   } else {
-    return res.status(300).json({ message: "User not found" });
+    return res.status(400).json({ message: "User not found" });
   }
-
-  return res.status(300).json({ message: "Yet to be implemented" });
 });
 
 // Add a book review
@@ -69,7 +69,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   } else {
     let book = books[isbn];
     book.reviews[username] = review;
-    return res.status(300).json({ message: "Review added successfully" });
+    return res.status(200).json({ message: "Review added successfully" });
   }
 });
 
