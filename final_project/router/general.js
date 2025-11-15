@@ -123,7 +123,7 @@ public_users.get("/author/:author", async function (req, res) {
       if (book.length > 0) {
         resolve(book);
       } else {
-        reject("Book not found for this Author!");
+        reject("Book not found for  this Author!");
       }
     });
 
