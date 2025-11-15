@@ -182,7 +182,9 @@ public_users.get("/review/:isbn", function (req, res) {
   }
   let reviewsBooks = books[isbn];
   if (!reviewsBooks) {
-    return res.status(404).json({ message: "Book not found with this ISBN" });
+    return res
+      .status(404)
+      .json({ message: "Book not found with this specific ISBN" });
   }
 
   return res.status(200).json(reviewsBooks.reviews);
