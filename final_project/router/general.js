@@ -162,7 +162,7 @@ public_users.get("/title/:title", async function (req, res) {
       if (book.length > 0) {
         resolve(book);
       } else {
-        reject("Book not found for specific title");
+        reject("Book not found for  specific title");
       }
     });
 
